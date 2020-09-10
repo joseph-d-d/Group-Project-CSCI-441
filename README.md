@@ -9,7 +9,7 @@ in the Group-Project-CSCI-441-Backend directory run
 `npm install`
 
 ## Running
-You need to bind npm start to the sorrect command for yuor operating system, this only needs to be done once.
+You need to bind npm start to the correct command for yuor operating system, this only needs to be done once.
 On MacOS or Linux, run the app with this command:
 `DEBUG=myapp:* npm start`
 
