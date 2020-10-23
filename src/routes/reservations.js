@@ -3,8 +3,9 @@ var router = express.Router();
 var Reservation = require("../reservation/Reservation");
 
 router.get("/", function (req, res) {
-  let reservations = req.app.locals.reservation.getReservations();
-  res.json(reservations);
+  req.app.locals.reservation
+    .getReservations()
+    .then((reservations) => res.json(reservations));
 });
 
 router.post("/", function (req, res) {
