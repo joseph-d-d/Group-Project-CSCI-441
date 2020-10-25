@@ -3,6 +3,7 @@ const express = require("express");
 const path = require("path");
 const cookieParser = require("cookie-parser");
 const logger = require("morgan");
+const cors = require("cors");
 
 const database = require("./database/Database");
 
@@ -21,7 +22,7 @@ app.locals.parkingLot = new ParkingLot(app.locals.db);
 app.locals.registration = new Registration(app.locals.db);
 app.locals.reservation = new Reservation(app.locals.db, app.locals.parkingLot);
 app.locals.user = new User(app.locals.db);
-
+app.use(cors());
 app.use(logger("dev"));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));

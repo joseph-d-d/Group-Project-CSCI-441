@@ -13,8 +13,8 @@ router.post("/", function (req, res) {
   let reservation = req.app.locals.reservation;
 
   reservation.makeReservation(
-    requestBody.user,
-    requestBody.store,
+    requestBody.user.id,
+    requestBody.store.id,
     requestBody.dateTime
   );
   res.status(201);

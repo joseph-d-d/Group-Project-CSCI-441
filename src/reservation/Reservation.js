@@ -4,16 +4,18 @@ class Reservation {
     this.parkingLot = parkingLot;
   }
 
-  makeReservation(user, store, dateTime) {
+  makeReservation(user, storeID, dateTime) {
     let parkingSpotID;
-    if (this.parkingLot.isParkingSpotAvailable) {
-      parkingSpotID = this.parkingLot.reserveSpot(store);
+    console.log(this.parkingLot.isParkingLotFull());
+    if (!this.parkingLot.isParkingLotFull()) {
+      parkingSpotID = this.parkingLot.findClosestSpot(storeID);
+      console.log(parkingSpotID);
+      this.db.addReservation({
+        user: user,
+        reservationDateAndTime: dateTime,
+        spotID: parkingSpotID,
+      });
     }
-    this.db.addReservation({
-      user: user,
-      reservationDateAndTime: dateTime,
-      spotID: parkingSpotID,
-    });
   }
 
   getReservations() {
