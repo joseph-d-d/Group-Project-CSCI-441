@@ -11,6 +11,7 @@ const reservationsRouter = require("./routes/reservations");
 const ParkingLot = require("./parkingLot/ParkingLot");
 const Registration = require("./registration/Registration");
 const Reservation = require("./reservation/Reservation");
+const User = require("./user/User");
 
 const app = express();
 //declared in the app.js which is basicly treated as main
@@ -19,6 +20,7 @@ app.locals.db = new database();
 app.locals.parkingLot = new ParkingLot(app.locals.db);
 app.locals.registration = new Registration(app.locals.db);
 app.locals.reservation = new Reservation(app.locals.db, app.locals.parkingLot);
+app.locals.user = new User(app.locals.db);
 
 app.use(logger("dev"));
 app.use(express.json());
