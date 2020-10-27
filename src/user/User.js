@@ -12,16 +12,17 @@ class User {
   }
 
   //Just an example of the user collection structure
-  addUser(first_name, last_name, phone, email, permissions, modified_date, modified_by, paymentMethods, vehicles) {
+  addUser(firstName, lastName, phone, email, password, permissions, modified_date, modified_by, paymentMethod, vehicles) {
     this.db.addUser({
-      first_name: first_name,
-      last_name: last_name,
+      firstName: firstName,
+      lastName: lastName,
       phone: phone,
       email: email,
+      password: password,
       permissions: permissions,
       modified_date: modified_date,
       modified_by: modified_by,
-      paymentMethods: paymentMethods,
+      paymentMethod: paymentMethod,
       vehicles: vehicles
     });
   }
