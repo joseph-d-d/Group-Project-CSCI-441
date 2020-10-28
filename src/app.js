@@ -7,6 +7,7 @@ const cors = require("cors");
 
 const database = require("./database/Database");
 
+const indexRouter = require("./routes/index");
 const usersRouter = require("./routes/users");
 const reservationsRouter = require("./routes/reservations");
 const parkingLotRouter = require("./routes/parkingLot");
@@ -29,7 +30,10 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, "public")));
+app.use("/src", express.static(path.join(__dirname, "../../public/src")));
+app.use("/modals", express.static(path.join(__dirname, "../../public/modals")));
 
+app.use('/', indexRouter);
 app.use("/users", usersRouter);
 app.use("/reservations", reservationsRouter);
 app.use("/parkingLot", parkingLotRouter);
