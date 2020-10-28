@@ -3,13 +3,15 @@ const { NotExtended } = require("http-errors");
 var router = express.Router();
 var User = require("../user/User");
 
-router.get("/:id", function (req, res) {
+router.get("/:id", async function (req, res) {
   let user;
   try {
-    user = req.app.locals.user.getUserById(req.params.id);
+    user = await req.app.locals.user.getUserById(req.params.id);
     if ( user == null ) {
       return res.status(404).json({message: "Unable to locate user"});
     }
+
+    return res.json(user);
   }
   catch ( error ) {
     res.status(500).json({ message: error.message });
