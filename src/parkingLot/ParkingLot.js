@@ -213,7 +213,7 @@ class ParkingLot {
   }
 
   addParkingLot() {
-    this.db.addParkingLot(this.parkingSpots);
+    this.db.addParkingLot({ parkingSpots: this.parkingSpots });
   }
 
   //FUNCTION: for testing, attempts to reserve a spot based on spotID
