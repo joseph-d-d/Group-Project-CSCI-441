@@ -23,7 +23,12 @@ class Database {
     collection.insertOne(reservation);
   };
 
-  getReservation = () => {};
+  getReservation = async (userEmail) => {
+    var collection = this.db.collection("reservations");
+    var reservation = await collection.findOne({ email: userEmail });
+    console.log(reservation);
+    return reservation;
+  };
 
   getReservations = async () => {
     var collection = this.db.collection("reservations");
@@ -40,14 +45,14 @@ class Database {
   getUserById = (id) => {
     let result;
     let collection = this.db.collection("users");
-    result = collection.findOne({_id: id}, function(err, val) {
-      if ( err ) return null;
+    result = collection.findOne({ _id: id }, function (err, val) {
+      if (err) return null;
       else return val;
     });
 
     return result;
-  }
-  
+  };
+
   getUsers = async () => {
     var collection = this.db.collection("users");
     var cursor = collection.find();
@@ -56,17 +61,23 @@ class Database {
       users.push(await cursor.next());
     }
     return users;
-  }
+  };
 
   addUser = (user) => {
+    this.db.createCollection("user", { strict: true }, (err, collection) => {});
+    var collection = this.db.collection("user");
+    collection.insertOne(user);
+  };
+
+  addParkingLot = async (parkingLot) => {
     this.db.createCollection(
-      "user",
+      "parkingLot",
       { strict: true },
       (err, collection) => {}
     );
-    var collection = this.db.collection("user");
-    collection.insertOne(user);
-  }
+    var collection = this.db.collection("parkingLot");
+    collection.insertOne(parkingLot);
+  };
 }
 
 module.exports = Database;

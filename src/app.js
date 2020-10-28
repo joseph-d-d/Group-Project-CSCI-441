@@ -9,6 +9,7 @@ const database = require("./database/Database");
 
 const usersRouter = require("./routes/users");
 const reservationsRouter = require("./routes/reservations");
+const parkingLotRouter = require("./routes/parkingLot");
 const ParkingLot = require("./parkingLot/ParkingLot");
 const Registration = require("./registration/Registration");
 const Reservation = require("./reservation/Reservation");
@@ -31,6 +32,7 @@ app.use(express.static(path.join(__dirname, "public")));
 
 app.use("/users", usersRouter);
 app.use("/reservations", reservationsRouter);
+app.use("/parkingLot", parkingLotRouter);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
