@@ -3,7 +3,6 @@ var router = express.Router();
 var Reservation = require("../reservation/Reservation");
 
 router.get("/", function (req, res) {
-  console.log(req.query.email);
   if (req.query.email) {
     req.app.locals.reservation
       .getReservation(req.query.email)
@@ -18,7 +17,6 @@ router.get("/", function (req, res) {
 router.post("/", function (req, res) {
   let requestBody = req.body;
   let reservation = req.app.locals.reservation;
-
   reservation.makeReservation(
     requestBody.email,
     requestBody.storeID,
