@@ -1,7 +1,14 @@
+/**
+ * Represents a Parking Lot.
+ */
 class ParkingLot {
-  constructor(db, parkingLotLayout) {
+  /**
+   * Constructor for Parking Lot.
+   * @constructor
+   * @param {DataBase} db - A reference to the database instance.
+   */
+  constructor(db) {
     this.db = db;
-    this.parkingLotLayout = parkingLotLayout;
     //this is an example of what the array will look like, first set represents the X coordinate, second set represents the Y coordinate, and then each contains both the spotID and it's status
 
     this.parkingSpots = [
@@ -107,11 +114,18 @@ class ParkingLot {
     ];
   }
 
+  /**
+   * Calls database function to add the parking spots to database.
+   */
   addParkingLot() {
     this.db.addParkingLot({ parkingSpots: this.parkingSpots });
   }
 
-  //FUNCTION: for testing, attempts to reserve a spot based on spotID
+  /**
+   * Attempts to reserve a spot based on spotID
+   * @param {number} spotID - The id of the parking spot
+   * @returns {string} - "space reserved", "spot unavailable" or "spot does not exist"
+   */
   reserveSpot(spotID) {
     for (let i = 0; i <= this.parkingSpots.length - 1; i++) {
       for (let j = 0; j <= this.parkingSpots[i].length - 1; j++) {
@@ -128,7 +142,11 @@ class ParkingLot {
     return "spot does not exist";
   }
 
-  //FUNTION: takes ID for the spot and checks if it is "open"
+  /**
+   * Takes ID for the spot and checks if it is "open"
+   * @param {number} spotID - The id of the parking spot
+   * @returns {boolean} - true if spot is available
+   */
   isParkingSpotAvailable(spotID) {
     for (let i = 0; i <= this.parkingSpots.length - 1; i++) {
       for (let j = 0; j <= this.parkingSpots[i].length - 1; j++) {
@@ -144,7 +162,11 @@ class ParkingLot {
     return false;
   }
 
-  //FUNTION: takes ID for spot and returns x coordinate
+  /**
+   * Takes ID for spot and returns x coordinate
+   * @param {number} spotID - The id of the parking spot
+   * @returns {number} - The column index of the parking spot in the array
+   */
   findSpotCoordinatesX(spotID) {
     for (let i = 0; i <= this.parkingSpots.length - 1; i++) {
       for (let j = 0; j <= this.parkingSpots[i].length - 1; j++) {
@@ -156,7 +178,11 @@ class ParkingLot {
     return "does not exist";
   }
 
-  //FUNTION: takes ID for spot and returns y coordinate
+  /**
+   * Takes ID for spot and returns y coordinate
+   * @param {number} spotID - The id of the parking spot
+   * @returns {number} - The row index of the parking spot in the array
+   */
   findSpotCoordinatesY(spotID) {
     for (let i = 0; i <= this.parkingSpots.length - 1; i++) {
       for (let j = 0; j <= this.parkingSpots[i].length - 1; j++) {
@@ -168,32 +194,50 @@ class ParkingLot {
     return "does not exist";
   }
 
-  //FUNTION: takes spot and updates its status to "open"
+  /**
+   * Takes spot and updates its status to "open"
+   * @param {number} spotID - The id of the parking spot
+   */
   openSpot(spotID) {
     this.updateSpotStatus(spotID, "open");
   }
 
-  //FUNTION: takes spot and updates its status to "reserved"
+  /**
+   * Takes spot and updates its status to "reserved"
+   * @param {number} spotID - The id of the parking spot
+   */
   reservedSpot(spotID) {
     this.updateSpotStatus(spotID, "reserved");
   }
 
-  //FUNTION: takes spot and updates its status to "occupied" when camera detects car is present
+  /**
+   * Takes spot and updates its status to "occupied" when camera detects car is present
+   * @param {number} spotID - The id of the parking spot
+   */
   occupiedSpot(spotID) {
     this.updateSpotStatus(spotID, "occupied");
   }
 
-  //FUNTION: takes spot and updates its status to "closed"
+  /**
+   * Takes spot and updates its status to "closed"
+   * @param {number} spotID - The id of the parking spot
+   */
   closeSpot(spotID) {
     this.updateSpotStatus(spotID, "closed");
   }
 
-  //FUNTION: takes spot and updates its status to "store"
+  /**
+   * Takes spot and updates its status to "store"
+   * @param {number} spotID - The id of the parking spot
+   */
   storeSpot(spotID) {
     this.updateSpotStatus(spotID, "store");
   }
 
-  //FUNCTION: returns true if parking lot is full
+  /**
+   * Checks if the parking lot is full.
+   * @returns {boolean} - true if parking lot is full
+   */
   isParkingLotFull() {
     for (let i = 0; i <= this.parkingSpots.length - 1; i++) {
       for (let j = 0; j <= this.parkingSpots[i].length - 1; j++) {
@@ -205,7 +249,11 @@ class ParkingLot {
     return true;
   }
 
-  //FUNCTION: takes the parking spot's ID and the string status to be updated to
+  /**
+   * Takes the parking spot's ID and the string status to be updated to
+   * @param {number} spotID - The id of the parking spot
+   * @param {string} newSpotStatus - The new status of the spot
+   */
   updateSpotStatus(spotID, newSpotStatus) {
     for (let i = 0; i <= this.parkingSpots.length - 1; i++) {
       for (let j = 0; j <= this.parkingSpots[i].length - 1; j++) {
@@ -216,7 +264,11 @@ class ParkingLot {
     }
   }
 
-  //FUNCTION: takes ID for store and returns the ID for the closest "open" parking spot
+  /**
+   * Takes ID for store and returns the ID for the closest "open" parking spot
+   * @param {number} storeID - The id of the store
+   * @returns {number} - the closest open parking spot to the store
+   */
   findClosestSpot(storeID) {
     let xStore = this.findSpotCoordinatesX(storeID); //get x coordinate for storeID
     let yStore = this.findSpotCoordinatesY(storeID); //get y coordinate for storeID
@@ -247,6 +299,10 @@ class ParkingLot {
   }
 
   //FUCNTION: returns random "open" spot
+  /**
+   * Returns random "open" spot
+   * @returns {number} - random open parking spot
+   */
   findRandomSpot() {
     while (this.isParkingLotFull() == false) {
       let xSpot = Math.floor(
