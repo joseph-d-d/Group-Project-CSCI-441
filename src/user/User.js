@@ -1,82 +1,128 @@
+/**
+ * Represents a User.
+ */
 class User {
-    constructor(db) {
-        this.db = db;
-    }
+  /**
+   * Constructor for User.
+   * @constructor
+   * @param {DataBase} db - A reference to the database instance.
+   */
+  constructor(db) {
+    this.db = db;
+  }
 
-    getUserById(id) {
-        return this.db.getUserById(id);
-    }
+  /**
+   * Gets user by ID
+   * @param {string} id - The ID of the user.
+   * @returns {Object} - A user.
+   */
+  getUserById(id) {
+    return this.db.getUserById(id);
+  }
 
-    getUserByEmail(email) {
-        return this.db.getUserByEmail(email);
-    }
+  /**
+   * Gets user by email
+   * @param {string} id - The email of the user.
+   * @returns {Object} - A user.
+   */
+  getUserByEmail(email) {
+    return this.db.getUserByEmail(email);
+  }
 
-    getUsers() {
-        return this.db.getUsers();
-    }
+  /**
+   * Gets all users
+   * @returns {Array} - All users.
+   */
+  getUsers() {
+    return this.db.getUsers();
+  }
 
-    addUser({
-        firstName,
-        lastName,
-        phone,
-        email,
-        password,
-        permissions,
-        modified_date,
-        modified_by,
-        paymentMethod,
-        vehicles,
-    }) {
-        this.db.addUser({
-            firstName: firstName,
-            lastName: lastName,
-            phone: phone,
-            email: email,
-            password: password,
-            permissions: permissions,
-            modified_date: modified_date,
-            modified_by: modified_by,
-            paymentMethod: paymentMethod,
-            vehicles: vehicles,
-        });
-    }
+  /**
+   * Makes a reservation
+   * @param {string} firstName - the first name of the user
+   * @param {string} lastName - the last name of the user
+   * @param {string} phone - the phone number of the user
+   * @param {string} email - the email of the user
+   * @param {string} password - the password of the user
+   * @param {string} permissions - the permissions the user has
+   * @param {DateTime} modified_date - the date the user was last modified
+   * @param {string} modified_by - the identifer of the user who modified this user
+   * @param {string} paymentMethod - the payment method of the user
+   * @param {Array} vehicles - the vehicles that the user plans to make reservations for
+   */
+  addUser({
+    firstName,
+    lastName,
+    phone,
+    email,
+    password,
+    permissions,
+    modified_date,
+    modified_by,
+    paymentMethod,
+    vehicles,
+  }) {
+    this.db.addUser({
+      firstName: firstName,
+      lastName: lastName,
+      phone: phone,
+      email: email,
+      password: password,
+      permissions: permissions,
+      modified_date: modified_date,
+      modified_by: modified_by,
+      paymentMethod: paymentMethod,
+      vehicles: vehicles,
+    });
+  }
 
-    updateUser(user) {
-        return this.db.updateUser(user);
-    }
+  /**
+   * Updates the current user
+   * @param {Object} user - The current User
+   * @returns {Object} - The updated user
+   */
+  updateUser(user) {
+    return this.db.updateUser(user);
+  }
 
-    authenticateUser() {
-        return this.db.authenticateUser;
-    }
+  /**
+   * Authenticates the current user
+   * @param {Object} user - The current User
+   * @param {string} password - The users password
+   * @returns {Object} - If the user password and username are correct
+   */
+  authenticateUser(email, password) {
+    return this.db.authenticateUser;
+  }
 
-    /**
-     * Result is attached to the session as req.session.passport.user
-     *
-     * @returns {function} Callback function:
-     *                          @param {string} id - _id stored in mongodb
-     *                          @param {function} done - called internally by strategy implementation
-     * @memberof User
-     */
-    serializeUser() {
-        return function(user, done){
-            done(null, user._id);
-        };
-    }
+  /**
+   * Result is attached to the session as req.session.passport.user
+   *
+   * @returns {function} Callback function:
+   * @param {string} id - _id stored in mongodb
+   * @param {function} done - called internally by strategy implementation
+   * @memberof User
+   */
+  serializeUser() {
+    return function (user, done) {
+      done(null, user._id);
+    };
+  }
 
-    /**
-     * In ID is used to find the user, which is then restored in req.user
-     *
-     * @returns {function} Async callback function:
-     *                          @param {string} id - Corresponds to _id in mongo database
-     *                          @param {function} done - called internally by strategy implementation
-     * @memberof User
-     */
-    deserializeUser() {
-        return async function(id, done){
-            const user = await this.getUserById(id);
-            done(null, user);
-        }.bind(this);
-    }
+  /**
+   * In ID is used to find the user, which is then restored in req.user
+   *
+   * @returns {function} Async callback function:
+   * @param {string} id - Corresponds to _id in mongo database
+   * @param {function} done - called internally by strategy implementation
+   * @memberof User
+   */
+  deserializeUser() {
+    return async function (id, done) {
+      const user = await this.getUserById(id);
+      done(null, user);
+    }.bind(this);
+  }
 }
 
 module.exports = User;
