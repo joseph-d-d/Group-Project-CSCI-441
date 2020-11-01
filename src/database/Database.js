@@ -110,7 +110,7 @@ class Database {
                     },
                 },
                 {
-                    returnNewDocument: true,
+                    returnOriginal: false,
                 },
             );
         } else {
@@ -131,7 +131,7 @@ class Database {
                     },
                 },
                 {
-                    returnNewDocument: true,
+                    returnOriginal: false,
                 },
             );
         }

@@ -85,9 +85,10 @@ router.put(
     [ "/dashboard", "/dashboard.html" ],
     middleware.emailToLowerCase,
     middleware.userExists,
-    function(req, res){
-        const updatedUser = req.app.locals.user.updateUser(req.body);
-        res.send(updatedUser);
+    async function(req, res){
+        let updatedUser = await req.app.locals.user.updateUser(req.body);
+        const { password, ...user } = updatedUser.value;
+        res.json(user);
     },
 );
 
