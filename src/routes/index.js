@@ -10,7 +10,7 @@ const middleware = require("../middleware/middleware");
  * @route   GET /
 */
 router.get([ "/", "/index", "/index.html" ], function(req, res){
-    res.sendFile(path.join(__dirname, "../../../public/index.html"));
+    res.sendFile(path.join(__dirname, "../../../Group-Project-CSCI-441-Frontend/index.html"));
 });
 
 /** 
@@ -21,7 +21,7 @@ router.get([ "/login", "/login.html" ], function(req, res){
     if (req.isAuthenticated()) {
         res.redirect("/dashboard");
     }
-    res.sendFile(path.join(__dirname, "../../../public/login.html"));
+    res.sendFile(path.join(__dirname, "../../../Group-Project-CSCI-441-Frontend/login.html"));
 });
 
 /**
@@ -47,7 +47,7 @@ router.get([ "/signup", "/signup.html" ], function(req, res){
     if (req.isAuthenticated()) {
         res.redirect("/dashboard");
     }
-    res.sendFile(path.join(__dirname, "../../../public/signup.html"));
+    res.sendFile(path.join(__dirname, "../../../Group-Project-CSCI-441-Frontend/signup.html"));
 });
 
 /**
@@ -74,7 +74,7 @@ router.get([ "/dashboard", "/dashboard.html" ], function(req, res){
     if (!req.isAuthenticated()) {
         res.redirect("/login");
     }
-    res.sendFile(path.join(__dirname, "../../../public/dashboard.html"));
+    res.sendFile(path.join(__dirname, "../../../Group-Project-CSCI-441-Frontend/dashboard.html"));
 });
 
 /**
