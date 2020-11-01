@@ -34,7 +34,7 @@ class Reservation {
   /**
    * Get the reservation associated with email address
    * @param {string} email - the email address of the user who created the reservation
-   * @returns {Object} - Reservation
+   * @returns {object} - Reservation
    */
   getReservation(email) {
     return this.db.getReservation(email);
