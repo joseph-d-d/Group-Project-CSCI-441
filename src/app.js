@@ -37,8 +37,8 @@ app.use(cookieParser());
 
 // Serves static files
 app.use(express.static(path.join(__dirname, "public")));
-app.use("/src", express.static(path.join(__dirname, "../../public/src")));
-app.use("/modals", express.static(path.join(__dirname, "../../public/modals")));
+app.use("/src", express.static(path.join(__dirname, "../../Group-Project-CSCI-441-Frontend/src")));
+app.use("/modals", express.static(path.join(__dirname, "../../Group-Project-CSCI-441-Frontend/modals")));
 
 // Passport and session configuration
 app.use(flash());
