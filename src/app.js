@@ -4,9 +4,15 @@ const path = require("path");
 const cookieParser = require("cookie-parser");
 const logger = require("morgan");
 const cors = require("cors");
+const session = require("express-session");
+const flash = require("connect-flash");
+const passport = require("passport");
+const LocalStrategy = require("passport-local").Strategy;
+require("dotenv").config(); // Access to .env variables
 
 const database = require("./database/Database");
 
+const indexRouter = require("./routes/index");
 const usersRouter = require("./routes/users");
 const reservationsRouter = require("./routes/reservations");
 const parkingLotRouter = require("./routes/parkingLot");
@@ -16,7 +22,7 @@ const Reservation = require("./reservation/Reservation");
 const User = require("./user/User");
 
 const app = express();
-//declared in the app.js which is basicly treated as main
+//declared in the app.js which is basically treated as main
 //assigning them to app.local makes it so they can be accessed in the routes
 app.locals.db = new database();
 app.locals.parkingLot = new ParkingLot(app.locals.db);
@@ -28,26 +34,55 @@ app.use(logger("dev"));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
-app.use(express.static(path.join(__dirname, "public")));
 
+// Serves static files
+app.use(express.static(path.join(__dirname, "public")));
+app.use("/src", express.static(path.join(__dirname, "../../public/src")));
+app.use("/modals", express.static(path.join(__dirname, "../../public/modals")));
+
+// Passport and session configuration
+app.use(flash());
+app.use(
+    session({
+        secret: process.env.SESSIONSECRET,
+        resave: false,
+        saveUninitialized: false,
+    }),
+);
+
+app.use(passport.initialize());
+app.use(passport.session());
+
+passport.use(
+    new LocalStrategy(
+        { usernameField: "email" },
+        app.locals.user.authenticateUser(),
+    ),
+);
+
+passport.serializeUser(app.locals.user.serializeUser());
+passport.deserializeUser(app.locals.user.deserializeUser());
+
+// Routes
+app.use("/", indexRouter);
 app.use("/users", usersRouter);
 app.use("/reservations", reservationsRouter);
 app.use("/parkingLot", parkingLotRouter);
 
 // catch 404 and forward to error handler
-app.use(function (req, res, next) {
-  next(createError(404));
+app.use(function(req, res, next){
+    next(createError(404));
 });
 
 // error handler
-app.use(function (err, req, res, next) {
-  // set locals, only providing error in development
-  res.locals.message = err.message;
-  res.locals.error = req.app.get("env") === "development" ? err : {};
+app.use(function(err, req, res, next){
+    // set locals, only providing error in development
+    res.locals.message = err.message;
+    res.locals.error = req.app.get("env") === "development" ? err : {};
 
-  console.error(err.stack);
-  res.json({ error: err });
-  res.status(err.status || 500);
+    console.error(err.stack);
+    res.json({ error: err });
+    res.status(err.status || 500);
 });
 
 module.exports = app;
