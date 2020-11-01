@@ -87,7 +87,7 @@ class Database {
         let updatedUser;
 
         // User includes an update to their password
-        if (user.password !== "") {
+        if (user.password && user.password !== "") {
             // Hash the new password
             const salt = await bcrypt.genSalt(10);
             user.password = await bcrypt.hash(user.password, salt);
