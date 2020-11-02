@@ -38,7 +38,7 @@ class User {
   }
 
   /**
-   * Makes a reservation
+   * Adds a user
    * @param {string} firstName - the first name of the user
    * @param {string} lastName - the last name of the user
    * @param {string} phone - the phone number of the user

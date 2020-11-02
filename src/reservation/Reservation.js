@@ -41,7 +41,7 @@ class Reservation {
   }
 
   /**
-   * Get the reservation associated with email address
+   * Gets all reservations
    * @returns {Array} - All Reservations
    */
   getReservations() {
