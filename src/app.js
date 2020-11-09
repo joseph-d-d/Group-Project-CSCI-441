@@ -16,7 +16,9 @@ const indexRouter = require("./routes/index");
 const usersRouter = require("./routes/users");
 const reservationsRouter = require("./routes/reservations");
 const parkingLotRouter = require("./routes/parkingLot");
+const payrateRouter = require("./routes/payrate");
 const ParkingLot = require("./parkingLot/ParkingLot");
+const PayRate = require("./payrate/Payrate");
 const Registration = require("./registration/Registration");
 const Reservation = require("./reservation/Reservation");
 const User = require("./user/User");
@@ -26,6 +28,7 @@ const app = express();
 //assigning them to app.local makes it so they can be accessed in the routes
 app.locals.db = new database();
 app.locals.parkingLot = new ParkingLot(app.locals.db);
+app.locals.payrate = new PayRate(app.locals.db);
 app.locals.registration = new Registration(app.locals.db);
 app.locals.reservation = new Reservation(app.locals.db, app.locals.parkingLot);
 app.locals.user = new User(app.locals.db);
@@ -68,6 +71,7 @@ app.use("/", indexRouter);
 app.use("/users", usersRouter);
 app.use("/reservations", reservationsRouter);
 app.use("/parkingLot", parkingLotRouter);
+app.use("/payrate", payrateRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next){
