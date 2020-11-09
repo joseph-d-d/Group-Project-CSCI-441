@@ -220,6 +220,31 @@ class Database {
     var collection = this.db.collection("parkingLot");
     collection.insertOne(parkingLot);
   };
+
+  /**
+   * Gets the current parking rate per hour
+   */
+  getPayRate = async () => {
+    let collection = this.db.collection("control");
+    let payrate = collection.findOne();
+    return await payrate;
+  }
+
+  /**
+   * Updates the current parking rate per hour
+   * @param int id - The object Id relating to the payment rate record 
+   * @param {object} data - The parking rate data passed as JSON
+   */
+  updatePayRate = async (id, data) => {
+    let object_id = new ObjectId(id);
+    let collection = this.db.collection("control");
+    collection.updateOne(
+      {_id: object_id }, 
+      { $set: data },
+      { upsert: true }
+    );
+  }
 }
+
 
 module.exports = Database;
