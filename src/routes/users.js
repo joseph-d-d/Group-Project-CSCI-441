@@ -27,6 +27,7 @@ router.get("/loggedIn", function (req, res) {
     const { password, ...user } = req.user;
     res.json(user);
   }
+  else res.redirect('/login');
 });
 
 /**

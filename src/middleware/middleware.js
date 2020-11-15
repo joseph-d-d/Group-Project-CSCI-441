@@ -2,7 +2,7 @@ const middlewareObj = {};
 
 middlewareObj.userExists = async function(req, res, next){
     // User is logged in and sent a PUT request to /dashboard to update
-    if (req.isAuthenticated() && req.body.email === req.user.email) {
+    if (req.isAuthenticated() && (req.body.email === req.user.email || req.body.adminUpdate == 1) ) {
         return next(); // no need to check db, user did not change their email
     }
 

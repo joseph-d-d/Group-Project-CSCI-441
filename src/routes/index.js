@@ -89,6 +89,22 @@ router.get(["/dashboard", "/dashboard.html"], function (req, res) {
 });
 
 /**
+ * @desc    Serves the administrative page if user is authenticated
+ * @route   GET /admin
+ */
+router.get(["/admin", "/admin.html"], function (req, res) {
+  if (!req.isAuthenticated()) {
+    res.redirect("/login");
+  }
+  res.sendFile(
+    path.join(
+      __dirname,
+      "../../../Group-Project-CSCI-441-Frontend/admin.html"
+    )
+  );
+});
+
+/**
  * @desc    Serves the dashboard page if user is authenticated
  * @route   GET /dashboard
  */
