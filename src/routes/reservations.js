@@ -62,8 +62,8 @@ router.post("/", function (req, res) {
  * @param {string} path - Express path
  * @param {callback} middleware - Express middleware.
  */
-router.delete("/:id", function (req, res) {
-  req.app.locals.reservation.cancelReservation(req.params.id);
+router.delete("/", function (req, res) {
+  req.app.locals.reservation.cancelReservation(req.query.email);
   res.status(202);
   res.send("Success");
 });
