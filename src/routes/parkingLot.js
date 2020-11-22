@@ -3,10 +3,10 @@ const app = require("../app");
 var router = express.Router();
 
 /**
- * Used to get all users
- * @name get/users
+ * Used to get the parking lot object
+ * @name get/
  * @function
- * @memberof module:routes/users~usersRouter
+ * @memberof module:routes/parkingLot
  * @inner
  * @param {string} path - Express path
  * @param {callback} middleware - Express middleware.
@@ -15,7 +15,6 @@ router.get("/", async function (req, res) {
   let lot;
   try {
     lot = await req.app.locals.parkingLot.getCurrentParkingLot();
-    console.log(lot);
     if (lot == null) {
       return res.status(404).json({ message: "Unable to retrieve parking lot" });
     }
@@ -25,6 +24,12 @@ router.get("/", async function (req, res) {
   }
 
   return res.send(lot);  
+});
+
+router.patch("/", function (req, res) {
+  req.app.locals.parkingLot.updateParkingLot(req.body);
+  res.status(201);
+  res.send("Success");
 });
 
 router.post("/", function (req, res) {

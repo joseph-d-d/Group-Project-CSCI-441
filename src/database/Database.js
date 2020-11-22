@@ -249,9 +249,12 @@ class Database {
     * @param {object} newLot 
     */
    updateParkingLot = (newLot) => {
-    var collection = this.db.collection("parkingLot");
-    collection.deleteOne();
-    collection.addOne(newLot);
+     //Another collection pointer is needed for the insert, otherwise a duplicate object id exception is thrown
+    var collectionDelete = this.db.collection("parkingLot");
+    collectionDelete.deleteOne();
+    var collectionAdd = this.db.collection("parkingLot");
+    newLot._id = ObjectId(newLot._id);
+    collectionAdd.insertOne(newLot);
    }
 
   /**
