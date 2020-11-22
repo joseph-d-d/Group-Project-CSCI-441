@@ -131,8 +131,8 @@ class ParkingLot {
   /**
    * Calls the database function to update the parking lot object
    */
-  updateParkingLot() {
-    this.db.updateParkingLot({parkingSpots: this.parkingSpots});
+  updateParkingLot(parkingSpots) {
+    this.db.updateParkingLot(parkingSpots);
    }
 
    /**
