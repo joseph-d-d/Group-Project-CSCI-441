@@ -3,6 +3,7 @@ const { ObjectId } = require("mongodb");
 var MongoClient = require("mongodb").MongoClient;
 var MongoUri = require("../constants/Keys").MONGODB_URI;
 const bcrypt = require("bcrypt");
+const { json } = require("express");
 /**
  * Represents the Database.
  */
@@ -223,6 +224,35 @@ class Database {
     var collection = this.db.collection("parkingLot");
     collection.insertOne(parkingLot);
   };
+
+  /**
+   * Rerieve parking lot object
+   */
+  getCurrentParkingLot = async() => {
+    var collection = this.db.collection("parkingLot");
+    var current = await collection.findOne();
+    return current;
+   }
+
+   /**
+    * Delete the current parking lot object and re-add the updated one
+    * @param {object} defaultLot 
+    */
+   deleteParkingLot = (defaultLot) => {
+    var collection = this.db.collection("parkingLot");
+    collection.deleteOne();
+    collection.addOne(defaultLot);
+   }
+
+   /**
+    * Update the current parking lot object
+    * @param {object} newLot 
+    */
+   updateParkingLot = (newLot) => {
+    var collection = this.db.collection("parkingLot");
+    collection.deleteOne();
+    collection.addOne(newLot);
+   }
 
   /**
    * Gets the current parking rate per hour

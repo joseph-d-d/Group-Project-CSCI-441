@@ -105,6 +105,22 @@ router.get(["/admin", "/admin.html"], function (req, res) {
 });
 
 /**
+ * @desc    Serves the revenue report page if user is authenticated
+ * @route   GET /revenue
+ */
+router.get(["/revenue", "/rptRevenue.html"], function (req, res) {
+  if (!req.isAuthenticated()) {
+    res.redirect("/login");
+  }
+  res.sendFile(
+    path.join(
+      __dirname,
+      "../../../Group-Project-CSCI-441-Frontend/rptRevenue.html"
+    )
+  );
+});
+
+/**
  * @desc    Serves the dashboard page if user is authenticated
  * @route   GET /dashboard
  */
