@@ -115,11 +115,33 @@ class ParkingLot {
   }
 
   /**
+   * Calls the database function to retrieve the current database object
+   */
+  getCurrentParkingLot() {
+    return this.db.getCurrentParkingLot();
+  }
+
+  /**
    * Calls database function to add the parking spots to database.
    */
   addParkingLot() {
     this.db.addParkingLot({ parkingSpots: this.parkingSpots });
   }
+
+  /**
+   * Calls the database function to update the parking lot object
+   */
+  updateParkingLot(parkingSpots) {
+    this.db.updateParkingLot(parkingSpots);
+   }
+
+   /**
+    * Calls the database function to delete and re-add the parking lot object
+    */
+   deleteParkingLot() {
+    defaultLot = new ParkingLot();
+    this.db.deleteParkingLot({parkingSpots: defaultLot.parkingSpots});
+   }
 
   /**
    * Attempts to reserve a spot based on spotID
