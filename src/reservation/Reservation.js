@@ -19,16 +19,22 @@ class Reservation {
    * @param {number} storeID - the id of the store that the quest is visiting
    * @param {DateTime} dateTime - the date and time of the reservation
    */
-  makeReservation(email, storeID, dateTime) {
+  makeReservation(email, phoneNumber, storeID, dateTime) {
     let parkingSpotID;
     if (!this.parkingLot.isParkingLotFull()) {
       parkingSpotID = this.parkingLot.findClosestSpot(storeID);
+      let userPin = this.generatePin(phoneNumber, parkingSpotID);
       this.db.addReservation({
         email: email,
+        pin: userPin,
         reservationDateAndTime: dateTime,
         spotID: parkingSpotID,
       });
     }
+  }
+
+  generatePin(phoneNumber, parkingSpotID) {
+    return phoneNumber.slice(-4) + parkingSpotID;
   }
 
   /**

@@ -46,6 +46,7 @@ router.post("/", function (req, res) {
   let reservation = req.app.locals.reservation;
   reservation.makeReservation(
     requestBody.email,
+    requestBody.phoneNumber,
     requestBody.storeID,
     requestBody.dateTime
   );
