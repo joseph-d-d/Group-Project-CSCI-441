@@ -59,6 +59,20 @@ class Database {
     }
     return reservations;
   };
+
+  /**
+   * Gets all reservations within a specified date range
+   * @returns {Array} - Reservations within date range
+   */
+  getReservationsByDateRange = async (from_date, to_date) => {
+    var collection = this.db.collection("reservations");
+    var cursor = collection.find({"isComplete": true, "arrival": {$gte:from_date}, "departure": {$lte:to_date}});
+    var reservations = [];
+    while (await cursor.hasNext()) {
+      reservations.push(await cursor.next());
+    }
+    return reservations;
+  };
   /**
    * Deletes reservation for the specified email address from the database
    * @param {string} email - the email address of the user who created the reservation
