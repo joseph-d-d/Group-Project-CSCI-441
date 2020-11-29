@@ -22,11 +22,20 @@ class User {
 
   /**
    * Gets user by email
-   * @param {string} id - The email of the user.
+   * @param {string} email - The email of the user.
    * @returns {object} - A user.
    */
   getUserByEmail(email) {
     return this.db.getUserByEmail(email);
+  }
+
+  /**
+   * Gets user by email
+   * @param {string} email - The email of the user.
+   * @returns {object} - A user.
+   */
+  getUserByLicensePlateNumber(licensePlateNumber) {
+    return this.db.getUserByLicensePlateNumber(licensePlateNumber);
   }
 
   /**

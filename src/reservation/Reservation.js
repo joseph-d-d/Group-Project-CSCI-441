@@ -8,9 +8,10 @@ class Reservation {
    * @param {DataBase} db - A reference to the database instance.
    * @param {ParkingLot} parkingLot - A reference to the Parking Lot instance.
    */
-  constructor(db, parkingLot) {
+  constructor(db, parkingLot, user) {
     this.db = db;
     this.parkingLot = parkingLot;
+    this.user = user;
   }
 
   /**
@@ -19,16 +20,23 @@ class Reservation {
    * @param {number} storeID - the id of the store that the quest is visiting
    * @param {DateTime} dateTime - the date and time of the reservation
    */
-  makeReservation(email, storeID, dateTime) {
+  makeReservation(email, phoneNumber, storeID, dateTime) {
     let parkingSpotID;
     if (!this.parkingLot.isParkingLotFull()) {
       parkingSpotID = this.parkingLot.findClosestSpot(storeID);
+      let userPin = this.generatePin(phoneNumber, parkingSpotID);
       this.db.addReservation({
         email: email,
+        pin: userPin,
+        isComplete: false,
         reservationDateAndTime: dateTime,
         spotID: parkingSpotID,
       });
     }
+  }
+
+  generatePin(phoneNumber, parkingSpotID) {
+    return phoneNumber.slice(-4) + parkingSpotID;
   }
 
   /**
@@ -46,6 +54,16 @@ class Reservation {
    */
   getReservations() {
     return this.db.getReservations();
+  }
+
+  async updateReservationArrival(licensePlateNumber, arrival) {
+    let user = await this.user.getUserByLicensePlateNumber(licensePlateNumber);
+    this.db.updateReservationArrival(user.email, arrival);
+  }
+
+  async updateReservationDeparture(licensePlateNumber, departure) {
+    let user = await this.user.getUserByLicensePlateNumber(licensePlateNumber);
+    this.db.updateReservationDeparture(user.email, departure);
   }
 
   /**

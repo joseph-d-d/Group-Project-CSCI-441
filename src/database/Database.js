@@ -42,7 +42,10 @@ class Database {
    */
   getReservation = async (userEmail) => {
     var collection = this.db.collection("reservations");
-    var reservation = await collection.findOne({ email: userEmail });
+    var reservation = await collection.findOne({
+      email: userEmail,
+      isComplete: false,
+    });
     return reservation;
   };
 
@@ -73,6 +76,32 @@ class Database {
     }
     return reservations;
   };
+
+   * Update the reservation arrival time
+   * @param {string} email - the email address of the user who created the reservation
+   * @param {Date} arrival - the arrival date and time of the car
+   */
+  updateReservationArrival = (email, arrival) => {
+    let collection = this.db.collection("reservations");
+    collection.updateOne(
+      { email: email, isComplete: false },
+      { $set: { arrival: arrival } }
+    );
+  };
+
+  /**
+   * Update the reservation arrival time
+   * @param {string} email - the email address of the user who created the reservation
+   * @param {Date} departure - the arrival date and time of the car
+   */
+  updateReservationDeparture = (email, departure) => {
+    let collection = this.db.collection("reservations");
+    collection.updateOne(
+      { email: email, isComplete: false },
+      { $set: { departure: departure, isComplete: true } }
+    );
+  };
+
   /**
    * Deletes reservation for the specified email address from the database
    * @param {string} email - the email address of the user who created the reservation
@@ -103,6 +132,19 @@ class Database {
     let result;
     let collection = this.db.collection("users");
     result = await collection.findOne({ email: email });
+    return result;
+  };
+
+  /**
+   * Gets user by email from the database
+   * @param {string} licensePlate - The License Plate of the users car.
+   * @returns {object} - A user.
+   */
+  getUserByLicensePlateNumber = async (licensePlate) => {
+    let collection = this.db.collection("users");
+    let result = await collection.findOne({
+      vehicles: licensePlate,
+    });
     return result;
   };
 
@@ -242,34 +284,34 @@ class Database {
   /**
    * Rerieve parking lot object
    */
-  getCurrentParkingLot = async() => {
+  getCurrentParkingLot = async () => {
     var collection = this.db.collection("parkingLot");
     var current = await collection.findOne();
     return current;
-   }
+  };
 
-   /**
-    * Delete the current parking lot object and re-add the updated one
-    * @param {object} defaultLot 
-    */
-   deleteParkingLot = (defaultLot) => {
+  /**
+   * Delete the current parking lot object and re-add the updated one
+   * @param {object} defaultLot
+   */
+  deleteParkingLot = (defaultLot) => {
     var collection = this.db.collection("parkingLot");
     collection.deleteOne();
     collection.addOne(defaultLot);
-   }
+  };
 
-   /**
-    * Update the current parking lot object
-    * @param {object} newLot 
-    */
-   updateParkingLot = (newLot) => {
-     //Another collection pointer is needed for the insert, otherwise a duplicate object id exception is thrown
+  /**
+   * Update the current parking lot object
+   * @param {object} newLot
+   */
+  updateParkingLot = (newLot) => {
+    //Another collection pointer is needed for the insert, otherwise a duplicate object id exception is thrown
     var collectionDelete = this.db.collection("parkingLot");
     collectionDelete.deleteOne();
     var collectionAdd = this.db.collection("parkingLot");
     newLot._id = ObjectId(newLot._id);
     collectionAdd.insertOne(newLot);
-   }
+  };
 
   /**
    * Gets the current parking rate per hour
