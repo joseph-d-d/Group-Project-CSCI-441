@@ -67,6 +67,14 @@ class Reservation {
   }
 
   /**
+   * Gets all reservations within a specified date range
+   * @returns {Array} - Reservations within date range
+   */
+  getReservationsByDateRange(from_date, to_date) {
+    return this.db.getReservationsByDateRange(from_date, to_date);
+  }
+
+  /**
    * Deletes reservation for the specified email address
    * @param {string} email - the email address of the user who created the reservation
    */
