@@ -77,7 +77,7 @@ class Database {
     return reservations;
   };
 
-   * Update the reservation arrival time
+   /** Update the reservation arrival time
    * @param {string} email - the email address of the user who created the reservation
    * @param {Date} arrival - the arrival date and time of the car
    */
