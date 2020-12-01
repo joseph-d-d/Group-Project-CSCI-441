@@ -69,7 +69,11 @@ class Database {
    */
   getReservationsByDateRange = async (from_date, to_date) => {
     var collection = this.db.collection("reservations");
-    var cursor = collection.find({"isComplete": true, "arrival": {$gte:from_date}, "departure": {$lte:to_date}});
+    var cursor = collection.find({
+      isComplete: true,
+      arrival: { $gte: from_date },
+      departure: { $lte: to_date }
+    });
     var reservations = [];
     while (await cursor.hasNext()) {
       reservations.push(await cursor.next());
@@ -124,8 +128,92 @@ class Database {
   };
 
   /**
+   * Gets user by password reset token that is not expired from the database
+   * @param {string} token - The password reset token
+   * @returns {object} - A user.
+   */
+  getUserByToken = async (token) => {
+    let user;
+    let collection = this.db.collection("users");
+    user = await collection.findOne({
+      resetPasswordToken: token,
+      resetPasswordExpires: {
+        $gt: new Date()
+      }
+    });
+    return user;
+  };
+
+  /**
+   * Sets the reset password token and token's expiration based on email
+   * @param {string} email - User's email
+   * @param {string} token - Reset password token
+   * @param {Date} date - Reset password token's expiration
+   */
+  setUserResetPasswordToken = async (email, token, date) => {
+    let collection = this.db.collection("users");
+    const updatedUser = await collection.findOneAndUpdate(
+      { email: email },
+      {
+        $set: {
+          resetPasswordToken: token,
+          resetPasswordExpires: date
+        }
+      },
+      {
+        returnOriginal: false
+      }
+    );
+
+    return updatedUser;
+  };
+
+  /**
+   * @desc  Unsets reset passwork token and expiration
+   *        Updates user's password
+   * @param {string} token - Reset passwork token
+   * @param {string} password - New user password
+   */
+  unsetTokenAndUpdatePassword = async (token, password) => {
+    let collection = this.db.collection("users");
+
+    // Hash the new password
+    const salt = await bcrypt.genSalt(10);
+    const hashedPassword = await bcrypt.hash(password, salt);
+
+    // Finds in database matching token, and only token that has not expired
+    // Removes the resetPasswordToken and resetPasswordExpires from user
+    // Updates the user's password for new hashed password
+    // Updates the modified_date and modified_by
+    const updatedUser = await collection.findOneAndUpdate(
+      {
+        resetPasswordToken: token,
+        resetPasswordExpires: {
+          $gt: new Date()
+        }
+      },
+      {
+        $unset: {
+          resetPasswordToken: "",
+          resetPasswordExpires: ""
+        },
+        $set: {
+          password: hashedPassword,
+          modified_date: new Date().toISOString().split("T")[0],
+          modified_by: "1"
+        }
+      },
+      {
+        returnOriginal: false
+      }
+    );
+
+    return updatedUser;
+  };
+
+  /**
    * Gets user by email from the database
-   * @param {string} id - The email of the user.
+   * @param {string} email - The email of the user.
    * @returns {object} - A user.
    */
   getUserByEmail = async (email) => {

@@ -21,6 +21,35 @@ class User {
   }
 
   /**
+   * Gets user by token
+   * @param {string} token - Token for password reset
+   * @returns {object} - A user.
+   */
+  getUserByToken(token) {
+    return this.db.getUserByToken(token);
+  }
+
+  /**
+   * Sets the reset password token and token's expiration based on email
+   * @param {string} email - User's email
+   * @param {string} token - Reset password token
+   * @param {Date} date - Reset password token's expiration
+   */
+  setUserResetPasswordToken(email, token, date) {
+    return this.db.setUserResetPasswordToken(email, token, date);
+  }
+
+  /**
+   * @desc  Unsets reset passwork token and expiration
+   *        Updates user's password
+   * @param {string} token - Reset passwork token
+   * @param {string} password - New user password
+   */
+    unsetTokenAndUpdatePassword = async (token, password) => {
+      return this.db.unsetTokenAndUpdatePassword(token, password);
+    }
+
+  /**
    * Gets user by email
    * @param {string} email - The email of the user.
    * @returns {object} - A user.

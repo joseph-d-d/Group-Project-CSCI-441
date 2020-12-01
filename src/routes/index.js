@@ -54,9 +54,6 @@ router.post(
  * @route   GET /forgot
  */
 router.get([ "/forgot", "/forgot.html" ], function(req, res){
-    if (req.isAuthenticated()) {
-        res.redirect("/dashboard");
-    }
     res.sendFile(
         path.join(
             __dirname,
@@ -67,6 +64,7 @@ router.get([ "/forgot", "/forgot.html" ], function(req, res){
 
 /**
  * @desc    Generates a token for resetting user's password
+ *          Sets the token and token expiration on user in database
  * @route   POST /forgot
  */
 router.post(
@@ -74,13 +72,24 @@ router.post(
     middleware.emailToLowerCase,
     async function(req, res){
         try {
-            const foundUser = await req.app.locals.user.getUserByEmail(
+            // Store the reset token and token expiration in database
+            let token = await crypto.randomBytes(20);
+            token = token.toString("hex");
+
+            // Token expires in 1 hour
+            const tokenExpires = new Date(Date.now() + 3600000);
+
+            // Sets the reset password token and expiration in db
+            const user = (await req.app.locals.user.setUserResetPasswordToken(
                 req.body.email,
-            );
+                token,
+                tokenExpires,
+            )).value;
 
-            if (foundUser) {
-                res.status(200);
-
+            if (!user) {
+                // Email not in database for password reset
+                res.status(404);
+            } else {
                 /**
                  * Steps:
                  *        1. In .env file, have the following environment variables
@@ -95,15 +104,10 @@ router.post(
                     port: 465,
                     secure: true,
                     auth: {
-                        user: process.env.EMAILUSER, // generated ethereal user
-                        pass: process.env.EMAILPW, // generated ethereal password
+                        user: process.env.EMAILUSER,
+                        pass: process.env.EMAILPW,
                     },
                 });
-
-                let token = await crypto.randomBytes(20);
-                token = token.toString("hex");
-
-                // Store the reset token and token expiration in database
 
                 let emailBody = `You are receiving this because you (or someone else) have requested the reset of the password for your account.
 
@@ -118,12 +122,12 @@ router.post(
                 // send mail with defined transport object
                 await transporter.sendMail({
                     from: `"Park n\' Go" <${process.env.EMAILUSER}>`, // sender address
-                    to: "tonybanhh@gmail.com", // list of receivers
+                    to: `${req.body.email}`, // list of receivers
                     subject: "Park n' Go Password Reset", // Subject line
                     text: emailBody, // plain text body
                 });
-            } else {
-                res.status(404);
+
+                res.status(200);
             }
             res.json(req.body.email);
         } catch (error) {
@@ -133,36 +137,78 @@ router.post(
 );
 
 /**
- * @desc    TODO: Displays the reset page
+ * @desc    Displays the reset page
  * @route   GET /reset/:token
  */
-router.get("/reset/:token", function(req, res){
+router.get("/reset/:token", async function(req, res){
     // See if there's a user with specified token and token expiration
-    // if not, send back error code and redirect to /forgot
-    // If there is:
-    // render reset form
-    res.sendFile(
-        path.join(
-            __dirname,
-            "../../../Group-Project-CSCI-441-Frontend/reset.html",
-        ),
+    const foundUser = await req.app.locals.user.getUserByToken(
+        req.params.token,
     );
+
+    // if not, send back error code and redirect to /forgot
+    if (!foundUser) {
+        res.status(404);
+        res.redirect("/forgot");
+    } else {
+        // Otherwise, render reset form
+        res.sendFile(
+            path.join(
+                __dirname,
+                "../../../Group-Project-CSCI-441-Frontend/reset.html",
+            ),
+        );
+    }
 });
 
-// TODO: POST request for /reset/:token
-
 /**
- * @desc    TODO: Resets the user's password in database
+ * @desc    Resets the user's password in database
  * @route   POST /reset/:token
  */
-router.post("/reset/:token", function(req, res){
-    // Find user in database based on token
-    // If token is invalid or expired, error back and jquery redirect
-    // Otherwise,
-    // - Update database for new password
-    // - Unset token and token expiration from user in db
-    // - Send confirmation email
-    // - Send back success code, display success with jquery Ajax and redirect to login
+router.post("/reset/:token", async function(req, res){
+    // Checks database for token, unsets the token from user and update password
+    const foundUser = (await req.app.locals.user.unsetTokenAndUpdatePassword(
+        req.params.token,
+        req.body.password,
+    )).value;
+
+    if (!foundUser) {
+        // If token is invalid or expired, error back and jquery redirect
+        res.sendStatus(408);
+    } else {
+        /**
+         * Steps:
+         *        1. In .env file, have the following environment variables
+         *                        EMAILUSER=email
+         *                        EMAILPW=password
+         *        2. If using gmail, https://stackoverflow.com/a/44133190
+         */
+
+        // create reusable transporter object using the default SMTP transport
+        let transporter = nodemailer.createTransport({
+            host: "smtp.gmail.com",
+            port: 465,
+            secure: true,
+            auth: {
+                user: process.env.EMAILUSER,
+                pass: process.env.EMAILPW,
+            },
+        });
+
+        let emailBody = `This is a confirmation that the password for ${foundUser.email} has been changed.`;
+
+        // Send confirmation email
+        await transporter.sendMail({
+            from: `"Park n\' Go" <${process.env.EMAILUSER}>`, // sender address
+            to: `${foundUser.email}`, // list of receivers
+            subject: "Park n' Go Password Reset", // Subject line
+            text: emailBody, // plain text body
+        });
+
+        // Send back success code, display success with jquery Ajax and redirect to login
+        res.status(200);
+        res.json(foundUser.email);
+    }
 });
 
 /**
