@@ -19,8 +19,9 @@ class Reservation {
    * @param {string} email - the email address of the user creating the reservation
    * @param {number} storeID - the id of the store that the quest is visiting
    * @param {DateTime} dateTime - the date and time of the reservation
+   * @param {number} amount - placeholder for the reservation amount calculated later
    */
-  makeReservation(email, phoneNumber, storeID, dateTime) {
+  makeReservation(email, phoneNumber, storeID, dateTime, amount) {
     let parkingSpotID;
     if (!this.parkingLot.isParkingLotFull()) {
       parkingSpotID = this.parkingLot.findClosestSpot(storeID);
@@ -31,6 +32,7 @@ class Reservation {
         isComplete: false,
         reservationDateAndTime: dateTime,
         spotID: parkingSpotID,
+        amount: amount
       });
     }
   }
@@ -61,9 +63,9 @@ class Reservation {
     this.db.updateReservationArrival(user.email, arrival);
   }
 
-  async updateReservationDeparture(licensePlateNumber, departure) {
+  async updateReservationDeparture(licensePlateNumber, departure, amount) {
     let user = await this.user.getUserByLicensePlateNumber(licensePlateNumber);
-    this.db.updateReservationDeparture(user.email, departure);
+    this.db.updateReservationDeparture(user.email, departure, amount);
   }
 
   /**

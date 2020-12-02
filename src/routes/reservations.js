@@ -54,7 +54,8 @@ router.post("/", function (req, res) {
     requestBody.email,
     requestBody.phoneNumber,
     requestBody.storeID,
-    requestBody.dateTime
+    requestBody.dateTime,
+    requestBody.amount
   );
   res.status(201);
   res.send("Success");

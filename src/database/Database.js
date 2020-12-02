@@ -98,11 +98,11 @@ class Database {
    * @param {string} email - the email address of the user who created the reservation
    * @param {Date} departure - the arrival date and time of the car
    */
-  updateReservationDeparture = (email, departure) => {
+  updateReservationDeparture = (email, departure, amount) => {
     let collection = this.db.collection("reservations");
     collection.updateOne(
       { email: email, isComplete: false },
-      { $set: { departure: departure, isComplete: true } }
+      { $set: { departure: departure, isComplete: true, amount: amount } }
     );
   };
 
