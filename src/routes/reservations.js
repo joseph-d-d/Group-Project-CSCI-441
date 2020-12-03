@@ -25,7 +25,13 @@ router.get("/", function (req, res) {
     req.app.locals.reservation
       .getReservation(req.query.email)
       .then((reservation) => res.json(reservation));
-  } else {
+  } 
+  else if (req.query.from_date && req.query.to_date) {
+    req.app.locals.reservation
+    .getReservationsByDateRange(req.query.from_date,req.query.to_date)
+    .then((reservation) => res.json(reservation));
+  }
+  else {
     req.app.locals.reservation
       .getReservations()
       .then((reservations) => res.json(reservations));
@@ -48,7 +54,8 @@ router.post("/", function (req, res) {
     requestBody.email,
     requestBody.phoneNumber,
     requestBody.storeID,
-    requestBody.dateTime
+    requestBody.dateTime,
+    requestBody.amount
   );
   res.status(201);
   res.send("Success");

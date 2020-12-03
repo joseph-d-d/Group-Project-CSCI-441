@@ -31,7 +31,8 @@ router.put("/", function (req, res) {
   } else if (req.query.departure != null) {
     reservation.updateReservationDeparture(
       req.query.licensePlateNumber,
-      req.query.departure
+      req.query.departure,
+      req.query.amount
     );
   }
 
