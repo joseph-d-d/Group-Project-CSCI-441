@@ -57,6 +57,17 @@ router.get(["/signup", "/signup.html"], function (req, res) {
 });
 
 /**
+ * @desc    Serves the kiosk page
+ * @route   GET /signup
+ */
+// Sign Up Route
+router.get(["/kiosk", "/kiosk.html"], function (req, res) {
+  res.sendFile(
+    path.join(__dirname, "../../../Group-Project-CSCI-441-Frontend/kiosk.html")
+  );
+});
+
+/**
  * @desc    Create new user and handle sign up logic
  * @route   POST /signup
  */
@@ -97,10 +108,7 @@ router.get(["/admin", "/admin.html"], function (req, res) {
     res.redirect("/login");
   }
   res.sendFile(
-    path.join(
-      __dirname,
-      "../../../Group-Project-CSCI-441-Frontend/admin.html"
-    )
+    path.join(__dirname, "../../../Group-Project-CSCI-441-Frontend/admin.html")
   );
 });
 

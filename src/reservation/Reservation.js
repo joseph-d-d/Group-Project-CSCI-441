@@ -48,6 +48,10 @@ class Reservation {
     return this.db.getReservation(email);
   }
 
+  getReservationByPin(pin) {
+    return this.db.getReservationByPin(pin);
+  }
+
   /**
    * Gets all reservations
    * @returns {Array} - All Reservations

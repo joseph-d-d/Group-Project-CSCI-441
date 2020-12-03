@@ -18,6 +18,7 @@ const reservationsRouter = require("./routes/reservations");
 const cameraRouter = require("./routes/camera");
 const parkingLotRouter = require("./routes/parkingLot");
 const payrateRouter = require("./routes/payrate");
+const kioskRouter = require("./routes/kiosk");
 const ParkingLot = require("./parkingLot/ParkingLot");
 const PayRate = require("./payrate/Payrate");
 const Registration = require("./registration/Registration");
@@ -88,6 +89,7 @@ app.use("/reservations", reservationsRouter);
 app.use("/camera", cameraRouter);
 app.use("/parkingLot", parkingLotRouter);
 app.use("/payrate", payrateRouter);
+app.use("/kiosks", kioskRouter);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {

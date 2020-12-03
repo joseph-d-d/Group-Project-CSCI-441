@@ -50,6 +50,20 @@ class Database {
   };
 
   /**
+   * Get the reservation associated with pin from the database
+   * @param {string} ping - the pin of the users reservation
+   * @returns {object} - Reservation
+   */
+  getReservationByPin = async (userPin) => {
+    var collection = this.db.collection("reservations");
+    var reservation = await collection.findOne({
+      pin: userPin,
+      isComplete: false,
+    });
+    return reservation;
+  };
+
+  /**
    * Gets all reservations from the database
    * @returns {Array} - All Reservations
    */
@@ -95,7 +109,7 @@ class Database {
    */
   deleteReservation = (userEmail) => {
     var collection = this.db.collection("reservations");
-    collection.deleteOne({ email: userEmail });
+    collection.deleteOne({ email: userEmail, isComplete: false });
   };
 
   /**
